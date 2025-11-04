@@ -1,11 +1,17 @@
 <?php
 // /kopdes/config.php
 
+// --- PENGATURAN SESI (BARU) ---
+// Set waktu hidup session cookie (1 hari = 86400 detik)
+// Ini membantu mencegah sesi terputus saat pengguna tidak aktif sebentar.
+ini_set('session.cookie_lifetime', 86400); 
+ini_set('session.gc_maxlifetime', 86400); 
+
 // --- Detail Koneksi Baru (Wasmernet/Remote) ---
 $host = 'db.fr-pari1.bengt.wasmernet.com';
 $port = '10272'; // Tambahkan Port
 $user = '95752a1d7a50800009a7d19c37b8'; // Ganti dengan Username yang baru
-$pass = '06909575-2a1d-7c1c-8000-0fdc2a33d2d3'; // *** PERHATIAN: Masukkan Password Anda di sini! ***
+$pass = '06909575-2a1d-7c1c-8000-0fdc2a33d2d3'; 
 $db   = 'kopdes';
 
 // Membuat koneksi database dengan menyertakan Port
@@ -21,4 +27,3 @@ if (!$koneksi) {
 mysqli_set_charset($koneksi, "utf8mb4");
 
 ?>
-
