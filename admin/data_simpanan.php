@@ -66,25 +66,45 @@ while ($data = mysqli_fetch_assoc($q_simpanan_wajib)) {
 }
 // --- AKHIR LOGIKA REKAPITULASI ---
 
+// --- LOGIKA RIWAYAT SIMPANAN POKOK ---
+// Ambil semua transaksi Simpanan Pokok
+$q_simpanan_pokok = mysqli_query($koneksi, "
+    SELECT s.tgl_simpan, s.jumlah, a.nama_anggota, a.no_anggota
+    FROM simpanan s
+    JOIN anggota a ON s.id_anggota = a.id_anggota
+    WHERE s.jenis_simpanan = 'Pokok'
+    ORDER BY s.tgl_simpan DESC
+");
+// --- AKHIR LOGIKA SIMPANAN POKOK ---
+
+// --- LOGIKA RIWAYAT SIMPANAN SUKARELA (BARU) ---
+// Ambil semua transaksi Simpanan Sukarela
+$q_simpanan_sukarela = mysqli_query($koneksi, "
+    SELECT s.tgl_simpan, s.jumlah, a.nama_anggota, a.no_anggota
+    FROM simpanan s
+    JOIN anggota a ON s.id_anggota = a.id_anggota
+    WHERE s.jenis_simpanan = 'Sukarela'
+    ORDER BY s.tgl_simpan DESC
+");
+// --- AKHIR LOGIKA SIMPANAN SUKARELA ---
+
 $title = "Simpanan Anggota | " . $SETTINGS['nama_koperasi'];
 $page_heading = "Simpanan Anggota";
 include 'template/header.php';
 ?>
 
-    <div class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 mt-5">
+       <div class="mt-5">
         <a href="tambah_simpanan.php" class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button"><svg class="w-[24px] h-[24px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/></svg>
             <span class="sr-only">Tambah Anggota</span>
             Tambah Simpanan
         </a>
+        </div>
 
-        <?php
-        // 🛑 KOREKSI: Blok PHP yang menampilkan pesan notifikasi berbasis $_GET['pesan'] DIHAPUS.
-        // Notifikasi akan ditangani oleh template/footer.php menggunakan SESSION.
-        ?>
-        
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5 mb-5">
-            <h3 class="text-xl font-bold mb-4 border-b pb-2 dark:text-white">Riwayat Transaksi Simpanan</h3>
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <?php // Begin of Riwayat Semua Transaksi Simpanan ?>
+        <div class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 mt-5">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 dark:text-white">Riwayat Semua Transaksi Simpanan</h2>   
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">No</th>
@@ -129,12 +149,14 @@ include 'template/header.php';
                 </tbody>
             </table>
         </div>
+     </div>
+     <?php // End of Riwayat Semua Transaksi Simpanan ?>
 
-        <div class="mt-8">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 dark:text-white">Rekap Simpanan Wajib Tahun <?php echo $selected_year; ?></h2>
-            
+     <?php // Rekap Simpanan Wajib Tahun ?>
+     <div class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 mt-5">
+            <h2 class="text-xl font-bold border-b pb-2  text-gray-800 mb-4 dark:text-white">Rekap <span class="text-blue-600 dark:text-blue-500">Simpanan Wajib</span> Tahun <mark class="px-2 text-white bg-blue-600 rounded-sm dark:bg-blue-500"><?php echo $selected_year; ?></mark></h2>
             <div class="mb-4">
-                <form method="GET" action="data_simpanan.php" class="flex items-center space-x-2">
+                <form method="GET" action="simpanan.php" class="flex items-center space-x-2">
                     <label for="tahun" class="text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Tahun:</label>
                     <select name="tahun" id="tahun" class="border border-gray-300 rounded-md shadow-sm p-2 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" onchange="this.form.submit()">
                         <?php
@@ -156,7 +178,7 @@ include 'template/header.php';
                             <th rowspan="2" class="py-3 px-3 text-left text-xs font-medium text-gray-600 uppercase dark:text-gray-400">No Anggota</th>
                             <th rowspan="2" class="py-3 px-3 text-left text-xs font-medium text-gray-600 uppercase border-r dark:text-gray-400">Nama Lengkap</th>
                             <th colspan="12" class="py-2 px-1 text-center text-xs font-medium text-gray-600 uppercase border-b border-l dark:text-gray-400">Bulan Simpanan Wajib (Rp.)</th>
-                            <th rowspan="2" class="py-3 px-3 text-center text-xs font-medium text-gray-600 uppercase border-l border-r dark:text-gray-400">Total Th. <?php echo $selected_year; ?></th>
+                            <th rowspan="2" class="py-3 px-3 text-center text-xs font-medium text-gray-600 uppercase border-l border-r dark:text-gray-400">Total Th. <mark class="px-2 text-white bg-blue-600 rounded-sm dark:bg-blue-500"><?php echo $selected_year; ?></mark></th>
                         </tr>
                         <tr>
                             <?php foreach ($months as $m) : ?>
@@ -187,7 +209,95 @@ include 'template/header.php';
                     </tbody>
                 </table>
             </div>
+
+     </div>
+
+     <?php // Riwayat Pembayaran Simpanan Pokok ?>
+     <div class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 mt-5">
+       <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 dark:text-white">Riwayat Pembayaran <span class="text-blue-600 dark:text-blue-500">Simpanan Pokok</span></h2>   
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-yellow-100 dark:bg-yellow-800 dark:text-gray-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">No</th>
+                        <th scope="col" class="px-6 py-3">No Anggota</th>
+                        <th scope="col" class="px-6 py-3">Nama Anggota</th>
+                        <th scope="col" class="px-6 py-3">Jumlah (Rp)</th>
+                        <th scope="col" class="px-6 py-3">Tanggal Bayar</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <?php 
+                    $no_pokok = 1; 
+                    if (mysqli_num_rows($q_simpanan_pokok) > 0) :
+                        while ($data_pokok = mysqli_fetch_assoc($q_simpanan_pokok)) : 
+                    ?>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-yellow-50 dark:hover:bg-gray-700">
+                            <td class="px-6 py-4"><?php echo $no_pokok++; ?></td>
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><?php echo htmlspecialchars($data_pokok['no_anggota']); ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($data_pokok['nama_anggota']); ?></td>
+                            <td class="px-6 py-4 font-bold text-green-700 dark:text-green-400">
+                                <?php echo number_format($data_pokok['jumlah'], 0, ',', '.'); ?>
+                            </td>
+                            <td class="px-6 py-4"><?php echo date('d-m-Y', strtotime($data_pokok['tgl_simpan'])); ?></td>
+                        </tr>
+                    <?php 
+                        endwhile;
+                    else:
+                    ?>
+                        <tr class="bg-white dark:bg-gray-800">
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">Belum ada riwayat pembayaran Simpanan Pokok.</td>
+                        </tr>
+                    <?php
+                    endif;
+                    ?>
+                </tbody>
+            </table>
         </div>
+      </div>
+
+     <?php // Riwayat Pembayaran Simpanan Sukarela ?>
+     <div class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 mt-5">
+       <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2 dark:text-white">Riwayat <span class="text-blue-600 dark:text-blue-500">Simpanan Sukarela</span></h2>  
+         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-blue-100 dark:bg-blue-800 dark:text-gray-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">No</th>
+                        <th scope="col" class="px-6 py-3">No Anggota</th>
+                        <th scope="col" class="px-6 py-3">Nama Anggota</th>
+                        <th scope="col" class="px-6 py-3">Jumlah (Rp)</th>
+                        <th scope="col" class="px-6 py-3">Tanggal Simpan</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <?php 
+                    $no_sukarela = 1; 
+                    if (mysqli_num_rows($q_simpanan_sukarela) > 0) :
+                        while ($data_sukarela = mysqli_fetch_assoc($q_simpanan_sukarela)) : 
+                    ?>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-gray-700">
+                            <td class="px-6 py-4"><?php echo $no_sukarela++; ?></td>
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"><?php echo htmlspecialchars($data_sukarela['no_anggota']); ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($data_sukarela['nama_anggota']); ?></td>
+                            <td class="px-6 py-4 font-bold text-blue-700 dark:text-blue-400">
+                                <?php echo number_format($data_sukarela['jumlah'], 0, ',', '.'); ?>
+                            </td>
+                            <td class="px-6 py-4"><?php echo date('d-m-Y', strtotime($data_sukarela['tgl_simpan'])); ?></td>
+                        </tr>
+                    <?php 
+                        endwhile;
+                    else:
+                    ?>
+                        <tr class="bg-white dark:bg-gray-800">
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500 italic">Belum ada riwayat Simpanan Sukarela.</td>
+                        </tr>
+                    <?php
+                    endif;
+                    ?>
+                </tbody>
+            </table>
         </div>
+     </div>
 
 <?php include 'template/footer.php';?>
