@@ -156,7 +156,7 @@ include 'template/header.php';
      <div class="block max-w-full p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 mt-5">
             <h2 class="text-xl font-bold border-b pb-2  text-gray-800 mb-4 dark:text-white">Rekap <span class="text-blue-600 dark:text-blue-500">Simpanan Wajib</span> Tahun <mark class="px-2 text-white bg-blue-600 rounded-sm dark:bg-blue-500"><?php echo $selected_year; ?></mark></h2>
             <div class="mb-4">
-                <form method="GET" action="simpanan.php" class="flex items-center space-x-2">
+                <form method="GET" action="data_simpanan.php" class="flex items-center space-x-2">
                     <label for="tahun" class="text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Tahun:</label>
                     <select name="tahun" id="tahun" class="border border-gray-300 rounded-md shadow-sm p-2 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white" onchange="this.form.submit()">
                         <?php
@@ -301,3 +301,4 @@ include 'template/header.php';
      </div>
 
 <?php include 'template/footer.php';?>
+
