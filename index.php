@@ -16,7 +16,9 @@ if (isset($_SESSION['status']) && $_SESSION['status'] == 'login') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Koperasi Simpan Pinjam</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
     <style>
         body { font-family: Arial, sans-serif; display: grid; place-items: center; min-height: 90vh; background-color: #f4f4f4; }
         .login-container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -32,7 +34,7 @@ if (isset($_SESSION['status']) && $_SESSION['status'] == 'login') {
 <body>
 
     <div class="login-container">
-        <h2>Login Koperasi</h2>
+        <h2>Login</h2>
 
         <?php
         // Menampilkan pesan error jika login gagal
