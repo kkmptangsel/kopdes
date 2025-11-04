@@ -153,7 +153,12 @@ include 'template/header.php'; // HTML output dimulai di sini
     <div class="lg:col-span-1 space-y-4">
         
         <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Detail Simpanan</h5>
+         <div class="flex items-center justify-between mb-4">
+           <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Detail Simpanan</h5>
+           <a type="button" href="data_simpanan.php" class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Lihat Riwayat
+           </a>
+          </div>
             <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                 <li class="py-2 flex justify-between">
                     <span class="text-gray-500">Pokok:</span>
@@ -345,4 +350,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
 <?php include 'template/footer.php';?>
